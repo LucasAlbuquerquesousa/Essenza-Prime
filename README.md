@@ -13,8 +13,14 @@
 - **Carrossel Hero**: Slides automáticos com conteúdo visual impactante
 - **Seção de Serviços**: 18 serviços organizados em 3 categorias (Corporal, Facial, Aparelhos)
 - **Filtros de Serviços**: Sistema de abas para alternar entre categorias
+- **Formulário Inteligente de Agendamento**: 
+  - Campos: Nome, Telefone (com formatação automática), Email, Tipo de Procedimento, Procedimento Específico
+  - Sistema dinâmico que mostra apenas procedimentos do tipo selecionado
+  - Score automático baseado no custo do procedimento (enviado ao N8N)
+  - Modal elegante com confirmação de envio
+- **Integração N8N**: Webhook para automação de envio de emails
 - **Depoimentos**: Seção com avaliações de clientes
-- **Integração WhatsApp**: Botão flutuante para agendamentos rápidos
+- **Integração WhatsApp**: Botão flutuante e CTA para agendamentos rápidos
 - **Mapa de Localização**: Google Maps integrado
 - **Navegação Suave**: Scroll behavior smooth em toda a página
 
@@ -98,10 +104,26 @@ Essenza Prime/
 - Telefone com link direto
 - Logo da clínica
 
-### 7. CTA Final
-- Chamada para ação com destaque visual
-- Botão grande para agendamento
-- Gradiente de fundo
+### 7. Formulário de Agendamento (CTA Final)
+- **Formulário Dinâmico**:
+  - Nome Completo
+  - Telefone com DDD (formatação automática)
+  - Email
+  - Tipo de Procedimento (Corporal, Facial, Equipamentos)
+  - Procedimento Específico (preenchido dinamicamente)
+- **Sistema de Pontuação (Score)**:
+  - Calculado automaticamente baseado no custo médio de cada procedimento
+  - Valores de 0 a 100
+  - Enviado junto aos dados para análise no N8N
+- **Modal de Sucesso**:
+  - Confirmação elegante com ícone e mensagem personalizada
+  - Lembrete de verificar email (incluindo pasta de Spam)
+  - Botão direto para seguir no Instagram
+- **Modal de Erro**:
+  - Mensagem amigável em caso de falha
+  - Opções para tentar novamente ou contatar via WhatsApp
+- **Integração N8N**: Envia dados para `https://n8n.srv997821.hstgr.cloud/webhook-test/form-essenza`
+- **Opção WhatsApp**: Botão verde com ícone para agendamento direto via WhatsApp
 
 ### 8. Footer
 - Logo
@@ -139,19 +161,62 @@ Essenza Prime/
 ```javascript
 currentSlide(index)  // Muda para um slide específico
 nextSlide()         // Vai para o próximo slide
-prevSlide()         // Volta para o slide anterior
+// Auto-avança a cada 5 segundos
 ```
 
 ### Menu Hamburger
 ```javascript
 // Ativa/desativa menu em mobile
-document.getElementById('hamburger').addEventListener('click', toggleMenu)
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active')
+    navMenu.classList.toggle('active')
+})
 ```
 
 ### Filtros de Serviços
 ```javascript
 // Filtra serviços por categoria
-filterServices(category)
+filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Mostra/oculta cards conforme categoria selecionada
+    })
+})
+```
+
+### Formulário de Agendamento
+```javascript
+// Formatação automática de telefone
+telefoneInput.addEventListener('input', (e) => {
+    // Formata como (00) 00000-0000
+})
+
+// Preenchimento dinâmico de procedimentos
+tipoProcedimentoSelect.addEventListener('change', (e) => {
+    // Preenche select de procedimento baseado no tipo
+})
+
+// Envio do formulário com integração N8N
+form.addEventListener('submit', async (e) => {
+    // Calcula score automaticamente
+    // Envia dados para webhook N8N
+    // Mostra modal de sucesso/erro
+})
+```
+
+### Modais
+```javascript
+// Mostrar/fechar modal de sucesso
+mostrarModalSucesso()
+fecharModalSucesso()
+
+// Mostrar/fechar modal de erro
+mostrarModalErro()
+fecharModalErro()
+
+// Fechar ao clicar fora do modal
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) fecharModal()
+})
 ```
 
 ## 🎯 Diferenciais
@@ -159,17 +224,77 @@ filterServices(category)
 ✅ Navegação intuitiva e rápida
 ✅ Design premium e elegante
 ✅ Totalmente responsivo
-✅ Integração WhatsApp
+✅ Formulário inteligente com campos dinâmicos
+✅ Sistema automático de pontuação (Score) por procedimento
+✅ Integração com N8N para automação de emails
+✅ Modais elegantes com animações suaves
+✅ Integração WhatsApp (botão flutuante + CTA)
 ✅ Sistema de filtros de serviços
-✅ Animações suaves
+✅ Formatação automática de telefone (DDD)
 ✅ SEO otimizado
 ✅ Acessibilidade visual
+✅ Modal com lembrete de verificar email
+✅ Link direto para Instagram no modal de sucesso
+
+## 🔗 Integração N8N
+
+O formulário envia os dados para um webhook N8N que pode ser configurado para:
+
+- Enviar email automático de confirmação ao cliente
+- Registrar os dados em banco de dados
+- Criar tarefa de acompanhamento
+- Integrar com CRM
+- Enviar notificações internas
+
+**Endpoint**: `https://n8n.srv997821.hstgr.cloud/webhook-test/form-essenza`
+
+**Dados Enviados (JSON)**:
+```json
+{
+  "nome": "João Silva",
+  "telefone": "(21) 96736-9147",
+  "email": "joao@email.com",
+  "tipoProcedimento": "facial",
+  "procedimento": "Peeling Ultrassônico",
+  "score": 65,
+  "data": "2025-11-13T10:30:00.000Z"
+}
+```
+
+## 📊 Tabela de Scores por Procedimento
+
+### Corporais (20-75)
+- Massagem Relaxante: 20
+- Drenagem Linfática: 30
+- Drenagem Modeladora: 35
+- Drenagem Pós-operatória: 45
+- Intradermoterapia: 50
+- Hidrolipoclasia: 60
+- Harmonização Glútea: 75
+
+### Faciais (25-85)
+- Limpeza de Pele: 25
+- Drenagem Linfática Facial: 28
+- Drenagem Pós-operatória Facial: 48
+- Intradermoterapia Facial: 55
+- Peeling Ultrassônico: 65
+- Lipo de Papada: 70
+- Ultrassom Microfocado: 85
+
+### Equipamentos (55-80)
+- Depilação a Laser: 55
+- Lipocavitação: 65
+- Criofrequência: 75
+- Inkie: 72
+- Criolipólise de Placas: 80
 
 ## 📝 Observações Importantes
 
 - Todos os procedimentos são realizados somente após avaliação individual
 - Resultados variam conforme biotipo e cuidados pessoais
 - Alguns procedimentos requerem múltiplas sessões
+- O score é calculado automaticamente e não é visível ao cliente
+- Um email automático será enviado ao cliente após o envio do formulário (via N8N)
 
 ## 🛠️ Desenvolvedor
 

@@ -199,6 +199,44 @@ function obterScore(tipo, procedimento) {
     return proc ? proc.score : 0;
 }
 
+// GERENCIAR MODAIS
+const confirmacaoModal = document.getElementById('confirmacaoModal');
+const erroModal = document.getElementById('erroModal');
+const fecharModal = document.getElementById('fecharModal');
+const fecharErroModal = document.getElementById('fecharErroModal');
+
+function mostrarModalSucesso() {
+    confirmacaoModal.classList.add('active');
+}
+
+function fecharModalSucesso() {
+    confirmacaoModal.classList.remove('active');
+}
+
+function mostrarModalErro() {
+    erroModal.classList.add('active');
+}
+
+function fecharModalErro() {
+    erroModal.classList.remove('active');
+}
+
+fecharModal.addEventListener('click', fecharModalSucesso);
+fecharErroModal.addEventListener('click', fecharModalErro);
+
+// Fechar modal ao clicar fora dele
+confirmacaoModal.addEventListener('click', (e) => {
+    if (e.target === confirmacaoModal) {
+        fecharModalSucesso();
+    }
+});
+
+erroModal.addEventListener('click', (e) => {
+    if (e.target === erroModal) {
+        fecharModalErro();
+    }
+});
+
 // Enviar formulário
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -231,14 +269,14 @@ form.addEventListener('submit', async (e) => {
         });
         
         if (response.ok) {
-            alert('Avaliação solicitada com sucesso! Entraremos em contato em breve.');
+            mostrarModalSucesso();
             form.reset();
             procedimentoSelect.innerHTML = '<option value="">Selecione um tipo de procedimento primeiro</option>';
         } else {
-            alert('Erro ao enviar formulário. Por favor, tente novamente.');
+            mostrarModalErro();
         }
     } catch (error) {
         console.error('Erro:', error);
-        alert('Erro ao enviar formulário. Por favor, tente novamente.');
+        mostrarModalErro();
     }
 }); 

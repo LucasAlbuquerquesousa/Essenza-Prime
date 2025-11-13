@@ -853,12 +853,203 @@ h3 {
     box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
 }
 
-/* FOOTER */
-footer {
-    background-color: var(--color-black);
-    color: white;
-    padding: 3rem 2rem 1rem;
+/* MODALS */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
 }
+
+.modal-overlay.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: white;
+    padding: 3rem 2.5rem;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease;
+}
+
+.modal-content.error {
+    border-top: 4px solid #e74c3c;
+}
+
+.modal-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.modal-icon.success {
+    background-color: #d4edda;
+    color: #28a745;
+}
+
+.modal-icon.error {
+    background-color: #f8d7da;
+    color: #e74c3c;
+}
+
+.modal-icon svg {
+    width: 45px;
+    height: 45px;
+}
+
+.modal-content h2 {
+    color: var(--color-teal);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.modal-content p {
+    color: var(--color-dark-gray);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.8rem;
+}
+
+.modal-secundary {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.modal-info {
+    color: var(--color-teal);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.modal-button {
+    padding: 0.95rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.5rem;
+    width: 100%;
+    background-color: var(--color-teal);
+    color: white;
+}
+
+.modal-button:hover {
+    background-color: #004d52;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 106, 111, 0.3);
+}
+
+.modal-button.secondary {
+    background-color: #e8e8e8;
+    color: var(--color-dark-gray);
+    border: 2px solid #ddd;
+    margin-top: 0;
+    width: auto;
+}
+
+.modal-button.secondary:hover {
+    background-color: #f5f5f5;
+    border-color: var(--color-teal);
+    color: var(--color-teal);
+    box-shadow: none;
+}
+
+.modal-button.whatsapp {
+    background-color: #25D366;
+    color: white;
+    border: none;
+    margin-top: 0;
+    width: auto;
+}
+
+.modal-button.whatsapp:hover {
+    background-color: #20ba5a;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+}
+
+.modal-buttons-social {
+    margin: 1.5rem 0;
+}
+
+.modal-button.instagram {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    margin-top: 0;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+}
+
+.modal-button.instagram:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+}
+
+ /* FOOTER */
+ footer {
+     background-color: var(--color-black);
+     color: white;
+     padding: 3rem 2rem 1rem;
+ }
 
 .footer-container {
     max-width: 1200px;
@@ -1117,5 +1308,56 @@ footer {
     .whatsapp-cta svg {
         width: 18px;
         height: 18px;
+    }
+
+    .modal-content {
+        padding: 2rem 1.5rem;
+        max-width: 90%;
+    }
+
+    .modal-icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 1rem;
+    }
+
+    .modal-icon svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .modal-content p {
+        font-size: 0.9rem;
+    }
+
+    .modal-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-button {
+        margin-top: 1rem;
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
+    }
+
+    .modal-button.secondary,
+    .modal-button.whatsapp,
+    .modal-button.instagram {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .modal-buttons-social {
+        margin: 1rem 0;
+    }
+
+    .modal-button.instagram {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
     }
     }

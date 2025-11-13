@@ -109,3 +109,136 @@ window.addEventListener('load', () => {
     // Aqui você pode adicionar lógica para verificar imagens
     console.log('Página carregada - Essenza Prime');
 });
+
+// BASE DE DADOS DE PROCEDIMENTOS COM SCORES
+const procedimentos = {
+    corporal: [
+        { nome: 'Massagem Relaxante', score: 20 },
+        { nome: 'Drenagem Modeladora', score: 35 },
+        { nome: 'Drenagem Linfática', score: 30 },
+        { nome: 'Drenagem Pós-operatória', score: 45 },
+        { nome: 'Intradermoterapia', score: 50 },
+        { nome: 'Hidrolipoclasia', score: 60 },
+        { nome: 'Harmonização Glútea', score: 75 }
+    ],
+    facial: [
+        { nome: 'Limpeza de Pele', score: 25 },
+        { nome: 'Drenagem Linfática Facial', score: 28 },
+        { nome: 'Drenagem Pós-operatória Facial', score: 48 },
+        { nome: 'Peeling Ultrassônico', score: 65 },
+        { nome: 'Intradermoterapia Facial', score: 55 },
+        { nome: 'Lipo de Papada', score: 70 },
+        { nome: 'Ultrassom Microfocado', score: 85 }
+    ],
+    equipamentos: [
+        { nome: 'Criolipólise de Placas', score: 80 },
+        { nome: 'Lipocavitação', score: 65 },
+        { nome: 'Criofrequência', score: 75 },
+        { nome: 'Depilação a Laser', score: 55 },
+        { nome: 'Inkie', score: 72 }
+    ]
+};
+
+// FORMULÁRIO E MANIPULAÇÃO
+const form = document.getElementById('agendamentoForm');
+const tipoProcedimentoSelect = document.getElementById('tipoProcedimento');
+const procedimentoSelect = document.getElementById('procedimento');
+const telefoneInput = document.getElementById('telefone');
+
+// Formatar telefone com DDD automático
+telefoneInput.addEventListener('input', (e) => {
+    let value = e.target.value.replace(/\D/g, '');
+    
+    if (value.length > 11) {
+        value = value.slice(0, 11);
+    }
+    
+    if (value.length >= 2) {
+        value = '(' + value.slice(0, 2) + ') ' + value.slice(2);
+    }
+    
+    e.target.value = value;
+});
+
+// Preencher procedimentos ao selecionar tipo
+tipoProcedimentoSelect.addEventListener('change', (e) => {
+    const tipo = e.target.value;
+    
+    // Limpar opções anteriores
+    procedimentoSelect.innerHTML = '';
+    
+    if (tipo) {
+        const opcoes = procedimentos[tipo];
+        
+        // Adicionar opção padrão
+        const optionDefault = document.createElement('option');
+        optionDefault.value = '';
+        optionDefault.textContent = 'Selecione um procedimento';
+        procedimentoSelect.appendChild(optionDefault);
+        
+        // Adicionar procedimentos específicos do tipo
+        opcoes.forEach(proc => {
+            const option = document.createElement('option');
+            option.value = proc.nome;
+            option.textContent = proc.nome;
+            option.setAttribute('data-score', proc.score);
+            procedimentoSelect.appendChild(option);
+        });
+    } else {
+        const optionDefault = document.createElement('option');
+        optionDefault.value = '';
+        optionDefault.textContent = 'Selecione um tipo de procedimento primeiro';
+        procedimentoSelect.appendChild(optionDefault);
+    }
+});
+
+// Função para obter o score do procedimento selecionado
+function obterScore(tipo, procedimento) {
+    const procs = procedimentos[tipo];
+    const proc = procs.find(p => p.nome === procedimento);
+    return proc ? proc.score : 0;
+}
+
+// Enviar formulário
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const nome = document.getElementById('nome').value;
+    const telefone = document.getElementById('telefone').value;
+    const email = document.getElementById('email').value;
+    const tipo = tipoProcedimentoSelect.value;
+    const procedimento = procedimentoSelect.value;
+    const score = obterScore(tipo, procedimento);
+    
+    // Preparar dados para enviar
+    const dados = {
+        nome: nome,
+        telefone: telefone,
+        email: email,
+        tipoProcedimento: tipo,
+        procedimento: procedimento,
+        score: score,
+        data: new Date().toISOString()
+    };
+    
+    try {
+        const response = await fetch('https://n8n.srv997821.hstgr.cloud/webhook-test/form-essenza', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+        });
+        
+        if (response.ok) {
+            alert('Avaliação solicitada com sucesso! Entraremos em contato em breve.');
+            form.reset();
+            procedimentoSelect.innerHTML = '<option value="">Selecione um tipo de procedimento primeiro</option>';
+        } else {
+            alert('Erro ao enviar formulário. Por favor, tente novamente.');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao enviar formulário. Por favor, tente novamente.');
+    }
+}); 

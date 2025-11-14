@@ -24,7 +24,7 @@ const indicators = document.querySelectorAll('.indicator');
 function showSlide(n) {
     slides.forEach(slide => slide.classList.remove('active'));
     indicators.forEach(indicator => indicator.classList.remove('active'));
-    
+
     slides[n].classList.add('active');
     indicators[n].classList.add('active');
 }
@@ -52,10 +52,10 @@ filterButtons.forEach(button => {
         filterButtons.forEach(btn => btn.classList.remove('active'));
         // Adiciona active ao botão clicado
         button.classList.add('active');
-        
+
         // Pega a categoria
         const category = button.getAttribute('data-filter');
-        
+
         // Mostra/oculta cards
         serviceCards.forEach(card => {
             if (card.getAttribute('data-category') === category) {
@@ -73,19 +73,12 @@ const expandButtons = document.querySelectorAll('.expand-btn');
 expandButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         e.preventDefault();
-        
+
         const card = button.closest('.service-card');
-        const details = card.querySelector('.service-details');
-        
-        // Toggle hidden class
-        details.classList.toggle('hidden');
-        
-        // Muda o texto do botão
-        if (details.classList.contains('hidden')) {
-            button.textContent = 'Saiba mais';
-        } else {
-            button.textContent = 'Esconder detalhes';
-        }
+        const procedureName = card.querySelector('h3').textContent;
+
+        // Redirecionar para página de procedimento
+        window.location.href = `procedure.html?procedure=${encodeURIComponent(procedureName)}`;
     });
 });
 
@@ -148,34 +141,34 @@ const telefoneInput = document.getElementById('telefone');
 // Formatar telefone com DDD automático
 telefoneInput.addEventListener('input', (e) => {
     let value = e.target.value.replace(/\D/g, '');
-    
+
     if (value.length > 11) {
         value = value.slice(0, 11);
     }
-    
+
     if (value.length >= 2) {
         value = '(' + value.slice(0, 2) + ') ' + value.slice(2);
     }
-    
+
     e.target.value = value;
 });
 
 // Preencher procedimentos ao selecionar tipo
 tipoProcedimentoSelect.addEventListener('change', (e) => {
     const tipo = e.target.value;
-    
+
     // Limpar opções anteriores
     procedimentoSelect.innerHTML = '';
-    
+
     if (tipo) {
         const opcoes = procedimentos[tipo];
-        
+
         // Adicionar opção padrão
         const optionDefault = document.createElement('option');
         optionDefault.value = '';
         optionDefault.textContent = 'Selecione um procedimento';
         procedimentoSelect.appendChild(optionDefault);
-        
+
         // Adicionar procedimentos específicos do tipo
         opcoes.forEach(proc => {
             const option = document.createElement('option');
@@ -240,14 +233,14 @@ erroModal.addEventListener('click', (e) => {
 // Enviar formulário
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const nome = document.getElementById('nome').value;
     const telefone = document.getElementById('telefone').value;
     const email = document.getElementById('email').value;
     const tipo = tipoProcedimentoSelect.value;
     const procedimento = procedimentoSelect.value;
     const score = obterScore(tipo, procedimento);
-    
+
     // Preparar dados para enviar
     const dados = {
         nome: nome,
@@ -258,7 +251,7 @@ form.addEventListener('submit', async (e) => {
         score: score,
         data: new Date().toISOString()
     };
-    
+
     try {
         const response = await fetch('https://n8n.srv997821.hstgr.cloud/webhook-test/form-essenza', {
             method: 'POST',
@@ -267,7 +260,7 @@ form.addEventListener('submit', async (e) => {
             },
             body: JSON.stringify(dados)
         });
-        
+
         if (response.ok) {
             mostrarModalSucesso();
             form.reset();

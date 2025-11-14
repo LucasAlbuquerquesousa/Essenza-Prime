@@ -147,7 +147,12 @@ body {
     transform: rotate(-45deg) translate(7px, -7px);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: 'Vollkorn', serif;
     font-weight: 600;
     color: var(--color-teal);
@@ -202,7 +207,7 @@ h3 {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .whatsapp-button:hover {
@@ -574,18 +579,7 @@ h3 {
     background-color: #004d52;
 }
 
-.service-details {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--color-light-gray);
-    color: var(--color-dark-gray);
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
 
-.service-details.hidden {
-    display: none;
-}
 
 .observation {
     background-color: var(--color-gold);
@@ -749,7 +743,7 @@ h3 {
     flex-direction: column;
 }
 
-.form-row + .form-group {
+.form-row+.form-group {
     margin-bottom: 1.5rem;
 }
 
@@ -837,6 +831,7 @@ h3 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 12px;
     background-color: #25D366 !important;
     color: white !important;
     border-color: #25D366 !important;
@@ -877,6 +872,7 @@ h3 {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -887,6 +883,7 @@ h3 {
         transform: translateY(50px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -1044,12 +1041,12 @@ h3 {
     transform: translateY(-2px);
 }
 
- /* FOOTER */
- footer {
-     background-color: var(--color-black);
-     color: white;
-     padding: 3rem 2rem 1rem;
- }
+/* FOOTER */
+footer {
+    background-color: var(--color-black);
+    color: white;
+    padding: 3rem 2rem 1rem;
+}
 
 .footer-container {
     max-width: 1200px;
@@ -1360,4 +1357,4 @@ h3 {
         padding: 0.8rem 1rem;
         font-size: 0.9rem;
     }
-    }
+}

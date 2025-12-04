@@ -42,30 +42,7 @@ function currentSlide(n) {
 // Auto-avança o carrossel a cada 5 segundos
 setInterval(nextSlide, 5000);
 
-// FILTRO DE SERVIÇOS
-const filterButtons = document.querySelectorAll('.filter-btn');
-const serviceCards = document.querySelectorAll('.service-card');
-
-filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        // Remove active de todos os botões
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        // Adiciona active ao botão clicado
-        button.classList.add('active');
-
-        // Pega a categoria
-        const category = button.getAttribute('data-filter');
-
-        // Mostra/oculta cards
-        serviceCards.forEach(card => {
-            if (card.getAttribute('data-category') === category) {
-                card.classList.remove('hidden');
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-    });
-});
+// Filtro de serviços removido - todos os serviços agora são mostrados
 
 // EXPANDIR/RECOLHER DETALHES DO SERVIÇO
 const expandButtons = document.querySelectorAll('.expand-btn');
@@ -105,36 +82,24 @@ window.addEventListener('load', () => {
 
 // BASE DE DADOS DE PROCEDIMENTOS COM SCORES
 const procedimentos = {
+    injetaveis: [
+        { nome: 'Toxina Botulínica', score: 85 },
+        { nome: 'Bioestimuladores de Colágeno', score: 80 },
+        { nome: 'Preenchedores Faciais', score: 75 },
+        { nome: 'Rinomodelação', score: 90 }
+    ],
     corporal: [
-        { nome: 'Massagem Relaxante', score: 20 },
-        { nome: 'Drenagem Modeladora', score: 35 },
-        { nome: 'Drenagem Linfática', score: 30 },
-        { nome: 'Drenagem Pós-operatória', score: 45 },
-        { nome: 'Intradermoterapia', score: 50 },
-        { nome: 'Hidrolipoclasia', score: 60 },
-        { nome: 'Harmonização Glútea', score: 75 }
+        { nome: 'Harmonização Corporal', score: 70 },
+        { nome: 'Protocolo de Verão', score: 75 }
     ],
-    facial: [
-        { nome: 'Limpeza de Pele', score: 25 },
-        { nome: 'Drenagem Linfática Facial', score: 28 },
-        { nome: 'Drenagem Pós-operatória Facial', score: 48 },
-        { nome: 'Peeling Ultrassônico', score: 65 },
-        { nome: 'Intradermoterapia Facial', score: 55 },
-        { nome: 'Lipo de Papada', score: 70 },
-        { nome: 'Ultrassom Microfocado', score: 85 }
-    ],
-    equipamentos: [
-        { nome: 'Criolipólise de Placas', score: 80 },
-        { nome: 'Lipocavitação', score: 65 },
-        { nome: 'Criofrequência', score: 75 },
-        { nome: 'Depilação a Laser', score: 55 },
-        { nome: 'Inkie', score: 72 }
+    aparelhos: [
+        { nome: 'ULTRAFORMER', score: 95 },
+        { nome: 'FOTONA', score: 88 }
     ]
 };
 
 // FORMULÁRIO E MANIPULAÇÃO
 const form = document.getElementById('agendamentoForm');
-const tipoProcedimentoSelect = document.getElementById('tipoProcedimento');
 const procedimentoSelect = document.getElementById('procedimento');
 const telefoneInput = document.getElementById('telefone');
 
@@ -153,42 +118,10 @@ telefoneInput.addEventListener('input', (e) => {
     e.target.value = value;
 });
 
-// Preencher procedimentos ao selecionar tipo
-tipoProcedimentoSelect.addEventListener('change', (e) => {
-    const tipo = e.target.value;
-
-    // Limpar opções anteriores
-    procedimentoSelect.innerHTML = '';
-
-    if (tipo) {
-        const opcoes = procedimentos[tipo];
-
-        // Adicionar opção padrão
-        const optionDefault = document.createElement('option');
-        optionDefault.value = '';
-        optionDefault.textContent = 'Selecione um procedimento';
-        procedimentoSelect.appendChild(optionDefault);
-
-        // Adicionar procedimentos específicos do tipo
-        opcoes.forEach(proc => {
-            const option = document.createElement('option');
-            option.value = proc.nome;
-            option.textContent = proc.nome;
-            option.setAttribute('data-score', proc.score);
-            procedimentoSelect.appendChild(option);
-        });
-    } else {
-        const optionDefault = document.createElement('option');
-        optionDefault.value = '';
-        optionDefault.textContent = 'Selecione um tipo de procedimento primeiro';
-        procedimentoSelect.appendChild(optionDefault);
-    }
-});
-
 // Função para obter o score do procedimento selecionado
-function obterScore(tipo, procedimento) {
-    const procs = procedimentos[tipo];
-    const proc = procs.find(p => p.nome === procedimento);
+function obterScore(procedimento) {
+    const allProcs = Object.values(procedimentos).flat();
+    const proc = allProcs.find(p => p.nome === procedimento);
     return proc ? proc.score : 0;
 }
 
@@ -237,16 +170,14 @@ form.addEventListener('submit', async (e) => {
     const nome = document.getElementById('nome').value;
     const telefone = document.getElementById('telefone').value;
     const email = document.getElementById('email').value;
-    const tipo = tipoProcedimentoSelect.value;
     const procedimento = procedimentoSelect.value;
-    const score = obterScore(tipo, procedimento);
+    const score = obterScore(procedimento);
 
     // Preparar dados para enviar
     const dados = {
         nome: nome,
         telefone: telefone,
         email: email,
-        tipoProcedimento: tipo,
         procedimento: procedimento,
         score: score,
         data: new Date().toISOString()
@@ -264,7 +195,6 @@ form.addEventListener('submit', async (e) => {
         if (response.ok) {
             mostrarModalSucesso();
             form.reset();
-            procedimentoSelect.innerHTML = '<option value="">Selecione um tipo de procedimento primeiro</option>';
         } else {
             mostrarModalErro();
         }
